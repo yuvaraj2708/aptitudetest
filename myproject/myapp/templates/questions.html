@@ -1,0 +1,44 @@
+<!-- filtered_questions.html -->
+
+<!-- Display filtered questions -->
+<form method="post" action="{% url 'save_answer' %}" onsubmit="return saveAnswers()">
+    {% csrf_token %}
+    <!-- Loop through filtered questions -->
+    {% for question in questions %}
+        <li>
+            <!-- Display question and options -->
+            <strong>Question:</strong> {{ question.question }}<br>
+            <strong>Option A:</strong> {{ question.a }}<br>
+            <strong>Option B:</strong> {{ question.b }}<br>
+            <strong>Option C:</strong> {{ question.c }}<br>
+            <strong>Option D:</strong> {{ question.d }}<br>
+            
+            <!-- Add a radio button for the user to select an option -->
+            <input type="radio" name="answer_{{ question.id }}" value="A"> A
+            <input type="radio" name="answer_{{ question.id }}" value="B"> B
+            <input type="radio" name="answer_{{ question.id }}" value="C"> C
+            <input type="radio" name="answer_{{ question.id }}" value="D"> D
+        </li>
+    {% empty %}
+        <li>No filtered questions found.</li>
+        {% endfor %}
+    <div class="pagination">
+        <span class="step-links">
+            {% if questions.has_previous %}
+                <a href="?page=1&department={{ department }}&topic={{ topic }}&role={{ role }}">&laquo; first</a>
+                <a href="?page={{ questions.previous_page_number }}&department={{ department }}&topic={{ topic }}&role={{ role }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ questions.number }} of {{ questions.paginator.num_pages }}.
+            </span>
+
+            {% if questions.has_next %}
+                <input type="submit" name="next" value="Next"> <!-- Add a submit button for "Next" -->
+                <a href="?page={{ questions.next_page_number }}&department={{ department }}&topic={{ topic }}&role={{ role }}">next</a>
+                <a href="?page={{ questions.paginator.num_pages }}&department={{ department }}&topic={{ topic }}&role={{ role }}">last &raquo;</a>
+            {% endif %}
+            
+        </span>
+    </div>
+</form>
